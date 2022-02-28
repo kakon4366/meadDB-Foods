@@ -44,6 +44,8 @@ const displayMeal = meals => {
 
 //searching same cetagory meals
 const searchMeal = () => {
+    const errorMessage = document.getElementById('error-message');
+    errorMessage.textContent = '';
     const searchTextBox = document.getElementById('search-text');
     const searchText = searchTextBox.value;
     searchTextBox.value = '';
@@ -67,30 +69,40 @@ const searchMeal = () => {
 const displaySameMeals = meals => {
     spinner('none');
     clearMeals('');
+    const errorMessage = document.getElementById('error-message');
     const mealsContainer = document.getElementById('meals-container');
     mealsContainer.textContent = '';
-    meals.forEach(meal => {
-        const div = document.createElement('div');
-        div.innerHTML = `
-            <div class="col">
-                <div class="card">
-                    <img src="${meal.strMealThumb}" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">${meal.strMeal}</h5>
-                        <p class="card-text">${meal.strInstructions.slice(0, 120)}</p>
-                        <button 
-                            type="button"
-                            data-bs-toggle="modal"
-                            data-bs-target="#exampleModal" 
-                            onclick="showMeal('${meal.idMeal}')" 
-                            class="btn btn-warning">Details
-                        </button>
+    // validation
+    console.log(meals);
+    if(meals == null){
+        errorMessage.innerHTML = `
+            <h2 class="text-center text-warning my-5">No Record Found! 😔</h2>
+        `; 
+    }else{
+        errorMessage.textContent = '';
+        meals.forEach(meal => {
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <div class="col">
+                    <div class="card">
+                        <img src="${meal.strMealThumb}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">${meal.strMeal}</h5>
+                            <p class="card-text">${meal.strInstructions.slice(0, 120)}</p>
+                            <button 
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal" 
+                                onclick="showMeal('${meal.idMeal}')" 
+                                class="btn btn-warning">Details
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-        mealsContainer.appendChild(div);
-    })
+            `;
+            mealsContainer.appendChild(div);
+        })
+    }
 }
 
 // load single meal in api 
